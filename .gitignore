@@ -2,8 +2,6 @@
 .env.*
 *.env
 .DS_Store
-.publish-state.json
-.scrub
 __pycache__/
 *.pyc
 node_modules/
@@ -11,4 +9,3 @@ node_modules/
 .pnp.*
 dist/
 data/
-
