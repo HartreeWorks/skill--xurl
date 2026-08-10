@@ -1,0 +1,4 @@
+interface:
+  display_name: "X research and API"
+  short_description: "Research public X and the user’s saved posts"
+  default_prompt: "Use $xurl to research a practical question across public X and the user’s synced bookmarks, then surface what might change my workflow."
