@@ -18,4 +18,20 @@ export const research = {
     },
   ],
   selectionNote: 'REPLACE_WITH_SELECTION_CRITERION',
+  reviewedPosts: {
+    notNoise: [
+      {
+        id: 'REPLACE_RELEVANT_TWEET_ID_1',
+        author: 'REPLACE_RELEVANT_AUTHOR_1',
+        note: 'REPLACE_WITH_WHY_THIS_POST_WAS_RELEVANT',
+      },
+    ],
+    noise: [
+      {
+        id: 'REPLACE_NOISE_TWEET_ID_1',
+        author: 'REPLACE_NOISE_AUTHOR_1',
+        note: 'REPLACE_WITH_WHY_THIS_POST_WAS_NOISE',
+      },
+    ],
+  },
 }

@@ -4,19 +4,71 @@ import { Tweet } from 'react-tweet'
 import { research } from './research'
 import './styles.css'
 
+function TweetUnavailable() {
+  return (
+    <div className="tweet-unavailable" role="status">
+      <strong>Unable to load this post here.</strong>
+      <span>Use the “Open on X” link above to view it.</span>
+    </div>
+  )
+}
+
 function TweetCard({ tweet, highlighted = false }) {
   return (
     <article className={highlighted ? 'tweet-card highlighted' : 'tweet-card'}>
       <div className="tweet-label">
         <span>{tweet.label || tweet.author}</span>
-        <a href={`https://x.com/i/status/${tweet.id}`} target="_blank" rel="noreferrer">
+        <a
+          href={`https://x.com/i/status/${tweet.id}`}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Open ${tweet.author}'s post on X`}
+        >
           Open on X
         </a>
       </div>
       <div className="tweet-embed" data-theme="light">
-        <Tweet id={tweet.id} />
+        <Tweet
+          id={tweet.id}
+          components={{ TweetNotFound: TweetUnavailable }}
+          onError={() => null}
+        />
       </div>
     </article>
+  )
+}
+
+function ReviewedPostList({ title, posts = [] }) {
+  const [hasOpened, setHasOpened] = React.useState(false)
+
+  function handleToggle(event) {
+    if (event.currentTarget.open) {
+      setHasOpened(true)
+    }
+  }
+
+  return (
+    <details className="reviewed-posts" onToggle={handleToggle}>
+      <summary>
+        <span>{title}</span>
+        <span className="reviewed-count">
+          {posts.length} {posts.length === 1 ? 'post' : 'posts'}
+        </span>
+      </summary>
+      {hasOpened &&
+        (posts.length > 0 ? (
+          <div className="reviewed-tweet-grid">
+            {posts.map((post) => (
+              <TweetCard
+                key={post.id}
+                tweet={{ ...post, label: post.note || post.author }}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="reviewed-empty">No posts in this category.</p>
+        ))}
+    </details>
   )
 }
 
@@ -63,7 +115,27 @@ function App() {
         </section>
       ))}
 
-      <footer>{research.selectionNote}</footer>
+      <footer>
+        <p className="selection-note">{research.selectionNote}</p>
+        {research.reviewedPosts && (
+          <section className="review-ledger" aria-labelledby="review-ledger-title">
+            <p className="eyebrow">Research trail</p>
+            <h2 id="review-ledger-title">Posts reviewed</h2>
+            <p className="review-ledger-intro">
+              {research.reviewedPosts.intro ||
+                'These lists show how every public post considered in the research pass was classified. Open either list to inspect the complete set.'}
+            </p>
+            <ReviewedPostList
+              title="Posts not classed as noise"
+              posts={research.reviewedPosts.notNoise}
+            />
+            <ReviewedPostList
+              title="Posts classed as noise"
+              posts={research.reviewedPosts.noise}
+            />
+          </section>
+        )}
+      </footer>
     </main>
   )
 }
